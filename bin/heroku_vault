@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'heroku_vault'
+
+HerokuVault::Cli.start

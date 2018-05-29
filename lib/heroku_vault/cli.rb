@@ -4,7 +4,7 @@ require 'active_support'
 
 module HerokuVault
   class Cli < Thor
-    desc "encrypt usage", "encrypt"
+    desc "encrypt config_file", "encrypt usage"
     option :password, aliases: :p, required: true
     def encrypt(file_name)
       config_data = open(file_name) do |io|
@@ -21,7 +21,7 @@ module HerokuVault
       puts encrypted.to_h.to_json
     end
 
-    desc "decrypt usage", "decrypt"
+    desc "decrypt config_file", "decrypt usage"
     option :password, aliases: :p, required: true
     def decrypt(file_name)
       config_data = open(file_name) do |io|
@@ -38,13 +38,13 @@ module HerokuVault
       puts decrypted.to_h.to_json
     end
 
-    desc "fetch usage", "fetch heroku_app_name"
+    desc "fetch heroku_app_name", "fetch usage"
     def fetch(app_name)
       heroku = HerokuVault::HerokuCommander.new
       puts heroku.config_all(app_name)
     end
 
-    desc "push usage", "push"
+    desc "push heroku_app_name", "push usage"
     def push
     end
   end

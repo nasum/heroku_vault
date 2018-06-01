@@ -91,9 +91,11 @@ module HerokuVault
       return password
     end
 
-    def output_file(file_name, json_data)
+    def output_file(file_name, json_hash)
       File.open(file_name, 'w') do |file|
-        JSON.dump(json_data, file)
+        JSON.pretty_generate(json_hash).each_line do |line|
+          file.puts line
+        end
       end
     end
   end

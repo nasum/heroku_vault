@@ -23,6 +23,7 @@ Or install it yourself as:
 ## Usage
 
 ```bash
+$ export HEROKU_TOKEN=hogehogehoge                     # export heroku token
 $ heroku_vault fetch heroku_app_name -o law.json       # fetch heroku_app config value to json
 $ emacs law.json                                       # edit config
 $ heroku_vault enrypt law.json -o encrypted.json       # config value encrypted

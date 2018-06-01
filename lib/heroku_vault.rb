@@ -1,3 +1,4 @@
+require 'io/console'
 require "heroku_vault/version"
 require "heroku_vault/main"
 require "heroku_vault/heroku_commander"

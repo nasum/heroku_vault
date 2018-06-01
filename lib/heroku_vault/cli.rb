@@ -5,9 +5,11 @@ module HerokuVault
   class Cli < Thor
     desc "encrypt config_file", "encrypt usage"
     method_option :output, aliases: :o, required: true
+    method_option :salt, aliases: :s
     def encrypt(file_name)
       password = enter_password
-      encryptor = HerokuVault::EncrypterFactory.create(password)
+      salt = enter_salt
+      encryptor = HerokuVault::EncrypterFactory.create(password, salt)
 
       config_data = open(file_name) do |io|
         JSON.load(io)
@@ -27,7 +29,8 @@ module HerokuVault
       end
 
       password = enter_password
-      encryptor = HerokuVault::EncrypterFactory.create(password)
+      salt = enter_salt
+      encryptor = HerokuVault::EncrypterFactory.create(password, salt)
 
       decrypted = config_data.map do |key, val|
         [key, encryptor.decrypt_and_verify(val)]
@@ -49,9 +52,10 @@ module HerokuVault
     method_option :output, aliases: :o, required: true
     def create_encrypted_config(app_name)
       password = enter_password
+      salt = enter_salt
       heroku = HerokuVault::HerokuCommander.new
       config_data = heroku.config_all(app_name)
-      encryptor = HerokuVault::EncrypterFactory.create(password)
+      encryptor = HerokuVault::EncrypterFactory.create(password, salt)
 
       encrypted = JSON.parse(config_data).map do |key, val|
         [key, encryptor.encrypt_and_sign(val)]
@@ -65,7 +69,8 @@ module HerokuVault
     method_option :file, aliases: :f, required: true
     def apply(app_name)
       password = enter_password
-      encryptor = HerokuVault::EncrypterFactory.create(password)
+      salt = enter_salt
+      encryptor = HerokuVault::EncrypterFactory.create(password, salt)
       heroku = HerokuVault::HerokuCommander.new
 
       File.open(options[:file]) do |file|
@@ -89,6 +94,13 @@ module HerokuVault
       password = STDIN.noecho(&:gets)
       puts
       return password
+    end
+
+    def enter_salt
+      print 'enter salt: '
+      salt = STDIN.noecho(&:gets)
+      puts
+      salt
     end
 
     def output_file(file_name, json_hash)

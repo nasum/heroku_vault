@@ -100,7 +100,7 @@ module HerokuVault
       print 'enter salt: '
       salt = STDIN.noecho(&:gets)
       puts
-      return salt
+      salt
     end
 
     def output_file(file_name, json_hash)
